@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="#FFCDD2"/> <!-- Arka plan rengi (kırmızı tonlarında) -->
+
+    <corners android:radius="4dp"/> <!-- Kenar yuvarlama -->
+
+</shape>

@@ -1,0 +1,67 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- ImageView CardView'un dışında -->
+    <ImageView
+        android:id="@+id/product_image"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:contentDescription="@string/product_image_desc"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="4dp" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:layout_margin="8dp"
+        android:elevation="4dp"
+        android:radius="8dp"
+        android:backgroundTint="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:paddingTop="4dp"
+            android:text="Ürün İsmi"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView
+            android:id="@+id/product_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:paddingTop="2dp"
+            android:text="Ürün Fiyatı"/>
+
+        <RatingBar
+            android:id="@+id/product_rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:progressTint="@color/orange"
+            android:secondaryProgressTint="@android:color/transparent"
+            android:numStars="5"
+            android:rating="4.5"
+            android:scaleX="1.04"
+            android:scaleY="1"
+            android:stepSize="0.1" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+    </LinearLayout>

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_urun"
+        android:icon="@drawable/urun"
+        android:title="AnaSayfa"
+        />
+    <item
+        android:id="@+id/navigation_favori"
+        android:icon="@drawable/favori"
+        android:title="Favori"/>
+    <item
+        android:id="@+id/navigation_sepet"
+        android:icon="@drawable/sepet"
+        android:title="Sepet"/>
+</menu>
