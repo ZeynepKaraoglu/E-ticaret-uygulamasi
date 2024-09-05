@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/orange"
-        app:title="Favorites"
+        app:title="Cart"
         app:titleTextColor="@android:color/black"
         app:navigationIcon="@drawable/back"
         tools:ignore="MissingConstraints"/>
@@ -44,7 +44,7 @@
         android:id="@+id/no_favorites_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Favori Ürün Yok !!"
+        android:text="Sepette Ürün Yok !!"
         android:textSize="20sp"
         android:textColor="#242424"
         android:visibility="gone"

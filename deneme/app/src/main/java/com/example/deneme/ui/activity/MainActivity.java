@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         SearchView searchView = findViewById(R.id.search_view);
         categoryLinearLayout = findViewById(R.id.categoryLinearLayout);
 
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -67,16 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
 
                 if (itemId == R.id.navigation_urun) {
-                    // Ana sayfa
+                    scrollToTop();
                     return true;
                 } else if (itemId == R.id.navigation_favori) {
-                    // Favori sayfasına git
                     Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
                     startActivity(intent);
                     return true;
                 } else if (itemId == R.id.navigation_sepet) {
-                    // Sepet sayfası
-                    Toast.makeText(MainActivity.this, "Sepet henüz tanımlanmadı.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                    startActivity(intent);
                     return true;
                 } else {
                     return false;
@@ -135,14 +135,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // Scroll pozisyonunu kaydetme
         recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Geri dönüldüğünde scroll pozisyonunu geri yükle
         if (recyclerViewState != null) {
             recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
         }
@@ -256,6 +254,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noResultsText.setVisibility(View.GONE);
+        }
+    }
+
+    private void scrollToTop(){
+        if (recyclerView != null) {
+            recyclerView.scrollToPosition(0); // RecyclerView'in pozisyonunu sıfırlayın
         }
     }
 }

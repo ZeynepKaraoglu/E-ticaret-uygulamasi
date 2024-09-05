@@ -6,15 +6,19 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.deneme.data.CartItem;
+import com.example.deneme.data.CartItemDao;
 import com.example.deneme.data.FavoriteProduct;
 import com.example.deneme.data.FavoriteProductDao;
 
-@Database(entities = {FavoriteProduct.class}, version = 1 , exportSchema = false)
+@Database(entities = {FavoriteProduct.class, CartItem.class}, version = 3 , exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
+
 
     private static AppDatabase instance;
 
     public abstract FavoriteProductDao favoriteProductDao();
+    public abstract CartItemDao cartItemDao();
 
     public static synchronized AppDatabase getInstance(Context context){
         if(instance==null){
@@ -25,4 +29,6 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return instance;
     }
+
+
 }

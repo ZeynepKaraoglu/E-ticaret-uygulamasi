@@ -62,4 +62,6 @@ dependencies {
 
     implementation ("androidx.room:room-runtime:2.5.0")
     annotationProcessor ("androidx.room:room-compiler:2.5.0")
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

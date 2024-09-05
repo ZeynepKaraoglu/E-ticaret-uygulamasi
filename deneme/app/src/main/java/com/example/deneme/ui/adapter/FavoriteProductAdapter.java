@@ -22,7 +22,7 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
     private List<FavoriteProduct> favoriteProductList;
     private OnItemClickListener listener;
 
-    public FavoriteProductAdapter(Context context, List<FavoriteProduct> favoriteProductList) {
+    public FavoriteProductAdapter(Context context, List<FavoriteProduct> favoriteProductList, OnItemClickListener listener) {
         this.context = context;
         this.favoriteProductList = favoriteProductList;
         this.listener = listener;
@@ -45,6 +45,9 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
 
         holder.productNameTextView.setText(product.getProductName());
         holder.productPriceTextView.setText("$" + product.getProductPrice());
+      //  holder.productRatingBar.setRating((float) product.getRating());
+      //  Log.d("FavoriteProductAdapter", "Rating: " + product.getRating());
+
 
         Glide.with(context)
                 .load(product.getProductImage())
@@ -52,7 +55,17 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
                 .error(R.drawable.error_image)
                 .into(holder.productImageView);
 
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(product));
+       /* holder.itemView.setOnClickListener(view -> {
+            if (listener != null) {
+                listener.onItemClick(product);
+            }
+        });
+        */
+
+
+
+        holder.itemView.setClickable(false);
+        holder.itemView.setFocusable(false);
     }
 
     @Override
@@ -64,12 +77,15 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
         ImageView productImageView;
         TextView productNameTextView;
         TextView productPriceTextView;
+       // RatingBar productRatingBar;
+
 
         public FavoriteProductViewHolder(@NonNull View itemView) {
             super(itemView);
             productImageView = itemView.findViewById(R.id.product_image);
             productNameTextView = itemView.findViewById(R.id.product_name);
             productPriceTextView = itemView.findViewById(R.id.product_price);
+          //  productRatingBar = itemView.findViewById(R.id.product_rating);
         }
     }
 }

@@ -14,13 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Deneme"
         tools:targetApi="31">
-        <activity android:name=".ui.activity.FavoritesActivity"> </activity>
-
+        <activity
+            android:name=".data.CartItem"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
-            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,6 +29,12 @@
         </activity>
         <activity
             android:name=".ui.activity.ProductDetailActivity"
+            android:parentActivityName=".ui.activity.MainActivity" />
+        <activity
+            android:name=".ui.activity.FavoritesActivity"
+            android:parentActivityName=".ui.activity.MainActivity" />
+        <activity
+            android:name=".ui.activity.CartActivity"
             android:parentActivityName=".ui.activity.MainActivity" />
     </application>
 

@@ -11,10 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.deneme.R;
+import com.example.deneme.data.CartItem;
+import com.example.deneme.data.CartItemDao;
 import com.example.deneme.data.FavoriteProduct;
 import com.example.deneme.data.FavoriteProductDao;
 import com.example.deneme.data.Product;
@@ -38,7 +41,6 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private Product product;
     private boolean isFavorite = false;
-    private ImageButton back;
 
     private ViewPager2 viewPager;
 
@@ -60,12 +62,20 @@ public class ProductDetailActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.product_price);
 
 
-        back =findViewById(R.id.back_button);
+        Toolbar toolbar = findViewById(R.id.back_button);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
 
         product = (Product) getIntent().getSerializableExtra("product");
 
+
         if (product != null) {
+            checkFavoriteStatus();
+
             productNameTextView.setText(product.getTitle());
             productCategoryTextView.setText(product.getCategory());
             productDescriptionTextView.setText(product.getDescription());
@@ -79,7 +89,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             viewPager.setAdapter(adapter);
 
 
-
             addToFavoritesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,10 +96,6 @@ public class ProductDetailActivity extends AppCompatActivity {
 
                 }
             });
-
-            if(isFavorite){
-                saveProductToFavorites(product);
-            }
 
 
             addToCartButton.setOnClickListener(new View.OnClickListener() {
@@ -106,12 +111,12 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         }
 
-        back.setOnClickListener(new View.OnClickListener() {
+      /*  back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
-        });
+        });*/
     }
 
 
@@ -134,7 +139,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         return true;
     }
-
+/*
     private void addToFavorites(Product product) {
 
         if (isFavorite) {
@@ -145,7 +150,6 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         } else {
             addToFavoritesButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.kalp));
-            addToFavoritesButton.setColorFilter(ContextCompat.getColor(this, R.color.red));
             Toast.makeText(this, "Ürün favorilere eklendi", Toast.LENGTH_SHORT).show();
             isFavorite = true;
 
@@ -156,6 +160,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void saveProductToFavorites(Product product) {
         AppDatabase db = AppDatabase.getInstance(this);
+        Log.d("DatabaseCheck", "Veritabanı başarıyla oluşturuldu veya mevcut.");
         FavoriteProductDao favoriteProductDao = db.favoriteProductDao();
 
         FavoriteProduct favoriteProduct = new FavoriteProduct();
@@ -164,10 +169,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         favoriteProduct.setProductImage(product.getThumbnail());
         favoriteProduct.setProductPrice(product.getPrice());
 
-        // Veritabanına kaydetme işlemini asenkron yap
-        Executors.newSingleThreadExecutor().execute(() -> {
-            favoriteProductDao.insert(favoriteProduct);
-        });
         Executors.newSingleThreadExecutor().execute(() -> {
             favoriteProductDao.insert(favoriteProduct);
             // Kaydın başarılı olup olmadığını kontrol et
@@ -175,11 +176,110 @@ public class ProductDetailActivity extends AppCompatActivity {
             Log.d("Database Check", "Favori Ürün Sayısı: " + products.size());
         });
 
+    }*/
+
+    private void checkFavoriteStatus() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            FavoriteProductDao favoriteProductDao = db.favoriteProductDao();
+            FavoriteProduct favoriteProduct = favoriteProductDao.getFavoriteProductById(product.getId());
+
+            runOnUiThread(() -> {
+                if (favoriteProduct != null) {
+                    isFavorite = true;
+                    addToFavoritesButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.kalp));
+                } else {
+                    isFavorite = false;
+                    addToFavoritesButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.kalp_border));
+                }
+            });
+        });
+    }
+
+    private void addToFavorites(Product product) {
+        AppDatabase db = AppDatabase.getInstance(this);
+        FavoriteProductDao favoriteProductDao = db.favoriteProductDao();
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            FavoriteProduct existingFavorite = favoriteProductDao.getFavoriteProductById(product.getId());
+            runOnUiThread(() -> {
+                if (existingFavorite != null) {
+                    removeFromFavorites(existingFavorite);
+                } else {
+                    saveProductToFavorites(product);
+                }
+            });
+        });
+    }
+
+    private void removeFromFavorites(FavoriteProduct favoriteProduct) {
+        AppDatabase db = AppDatabase.getInstance(this);
+        FavoriteProductDao favoriteProductDao = db.favoriteProductDao();
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            favoriteProductDao.delete(favoriteProduct);
+            runOnUiThread(() -> {
+                addToFavoritesButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.kalp_border));
+                addToFavoritesButton.setColorFilter(ContextCompat.getColor(this, R.color.gray));
+                Toast.makeText(this, "Ürün favorilerden kaldırıldı", Toast.LENGTH_SHORT).show();
+                isFavorite = false;
+            });
+        });
+    }
+
+    private void saveProductToFavorites(Product product) {
+        AppDatabase db = AppDatabase.getInstance(this);
+        FavoriteProductDao favoriteProductDao = db.favoriteProductDao();
+
+        FavoriteProduct favoriteProduct = new FavoriteProduct();
+        favoriteProduct.setProductId(product.getId());
+        favoriteProduct.setProductName(product.getTitle());
+        favoriteProduct.setProductImage(product.getThumbnail());
+        favoriteProduct.setProductPrice(product.getPrice());
+        // favoriteProduct.setRating(product.getRating());
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            favoriteProductDao.insert(favoriteProduct);
+            runOnUiThread(() -> {
+                addToFavoritesButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.kalp));
+                addToFavoritesButton.setColorFilter(ContextCompat.getColor(this, R.color.red));
+                Toast.makeText(this, "Ürün favorilere eklendi", Toast.LENGTH_SHORT).show();
+                isFavorite = true;
+            });
+        });
     }
 
 
     private void addToCart(Product product, int quantity) {
+        AppDatabase db = AppDatabase.getInstance(this);
+        CartItemDao cartItemDao = db.cartItemDao();
 
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<CartItem> cartItemList = cartItemDao.getAllCartItems();
+
+            CartItem existingCartItem = null;
+            for (CartItem item : cartItemList) {
+                if (item.getProductId() == product.getId()) {
+                    existingCartItem = item;
+                    break;
+                }
+            }
+
+            if (existingCartItem != null) {
+                existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+                cartItemDao.update(existingCartItem);
+                runOnUiThread(() -> Toast.makeText(ProductDetailActivity.this, "Sepette güncellendi", Toast.LENGTH_SHORT).show());
+            } else {
+                CartItem cartItem = new CartItem();
+                cartItem.setProductId(product.getId());
+                cartItem.setProductName(product.getTitle());
+                cartItem.setProductImage(product.getThumbnail());
+                cartItem.setProductPrice(product.getPrice());
+                cartItem.setQuantity(quantity);
+                cartItemDao.insert(cartItem);
+                runOnUiThread(() -> Toast.makeText(ProductDetailActivity.this, "Sepete eklendi", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 
 }

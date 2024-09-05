@@ -2,6 +2,4 @@
     <string name="app_name">deneme</string>
     <string name="product_image_desc">Ürün Görseli</string>
     <string name="category_icon_desc">Kategoriye Göre Filtrele</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
